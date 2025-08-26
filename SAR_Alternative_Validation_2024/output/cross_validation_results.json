@@ -1,0 +1,95 @@
+{
+  "range_resolution_consistency": {
+    "primary_resolution": 1.5,
+    "alternative_resolutions": {
+      "skolnik": 1.5,
+      "richards": 1.5,
+      "omega_k": 1.5,
+      "tb_product": 47.43416490252569,
+      "primary": 1.5
+    },
+    "differences_percent": {
+      "skolnik": 0.0,
+      "richards": 0.0,
+      "omega_k": 0.0
+    },
+    "max_difference_percent": 0.0,
+    "passed": true
+  },
+  "processing_gain_consistency": {
+    "primary_gain_db": 30.0,
+    "alternative_gains_db": {
+      "skolnik": 30.0,
+      "richards": 30.0,
+      "omega_k": 30.0
+    },
+    "differences_db": {
+      "skolnik": 0.0,
+      "richards": 0.0,
+      "omega_k": 0.0
+    },
+    "max_difference_db": 0.0,
+    "passed": true
+  },
+  "point_target_consistency": {
+    "results": [
+      {
+        "target_range": 500,
+        "primary_detected": 499.58326387731296,
+        "alternative_detected": 499.5,
+        "primary_error": 0.4167361226870412,
+        "alternative_error": 0.5,
+        "cross_difference": 0.08326387731295881,
+        "cross_difference_percent": 0.016652775462591765,
+        "magnitude_ratio": 0.005903772534239954
+      },
+      {
+        "target_range": 1000,
+        "primary_detected": 999.9166527754627,
+        "alternative_detected": 999.7500000000001,
+        "primary_error": 0.08334722453730592,
+        "alternative_error": 0.2499999999998863,
+        "cross_difference": 0.1666527754625804,
+        "cross_difference_percent": 0.016665277546258038,
+        "magnitude_ratio": 0.005903772534239954
+      },
+      {
+        "target_range": 2000,
+        "primary_detected": 2000.0,
+        "alternative_detected": 1999.5000000000002,
+        "primary_error": 0.0,
+        "alternative_error": 0.4999999999997726,
+        "cross_difference": 0.4999999999997726,
+        "cross_difference_percent": 0.024999999999988632,
+        "magnitude_ratio": 0.005903772534239954
+      }
+    ],
+    "max_cross_difference_percent": 0.024999999999988632,
+    "passed": true
+  },
+  "parameter_consistency": {
+    "primary_parameters": {
+      "fc": 10000000000.0,
+      "B": 100000000.0,
+      "Tp": 1e-05,
+      "wavelength": 0.03,
+      "Kr": 10000000000000.0
+    },
+    "alternative_parameters": {
+      "fc": 10000000000.0,
+      "B": 100000000.0,
+      "Tp": 1e-05,
+      "wavelength": 0.03,
+      "Kr": 10000000000000.0
+    },
+    "max_difference_percent": 0,
+    "passed": true
+  },
+  "summary": {
+    "tests_passed": 4,
+    "total_tests": 4,
+    "success_rate": 100.0,
+    "overall_passed": true,
+    "timestamp": "2025-08-26T21:44:23.075266"
+  }
+}

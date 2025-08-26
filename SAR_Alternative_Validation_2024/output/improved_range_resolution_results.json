@@ -1,0 +1,62 @@
+{
+  "improved_two_point_separation": {
+    "results": [
+      {
+        "case": "Well below limit (0.6x)",
+        "theoretical_sep": 0.8999999999999773,
+        "measured_sep": null,
+        "valley_depth_db": null,
+        "resolved": false,
+        "peaks_found": 1,
+        "ratio_to_resolution": 0.5999999999999849
+      },
+      {
+        "case": "Below limit (0.8x)",
+        "theoretical_sep": 1.2000000000000455,
+        "measured_sep": null,
+        "valley_depth_db": null,
+        "resolved": false,
+        "peaks_found": 1,
+        "ratio_to_resolution": 0.8000000000000304
+      },
+      {
+        "case": "At resolution limit (1.0x)",
+        "theoretical_sep": 1.5,
+        "measured_sep": 3.000500083347333,
+        "valley_depth_db": -61.98173951432451,
+        "resolved": true,
+        "peaks_found": 3,
+        "ratio_to_resolution": 1.0
+      },
+      {
+        "case": "Above limit (1.2x)",
+        "theoretical_sep": 1.7999999999999545,
+        "measured_sep": 3.000500083347333,
+        "valley_depth_db": -61.98173951430541,
+        "resolved": true,
+        "peaks_found": 3,
+        "ratio_to_resolution": 1.1999999999999698
+      },
+      {
+        "case": "Well above limit (1.5x)",
+        "theoretical_sep": 2.25,
+        "measured_sep": null,
+        "valley_depth_db": null,
+        "resolved": false,
+        "peaks_found": 1,
+        "ratio_to_resolution": 1.5
+      },
+      {
+        "case": "Far above limit (2.0x)",
+        "theoretical_sep": 3.0,
+        "measured_sep": 3.0005000833472195,
+        "valley_depth_db": -18.406780777034534,
+        "resolved": true,
+        "peaks_found": 10,
+        "ratio_to_resolution": 2.0
+      }
+    ],
+    "accuracy": 1.0,
+    "passed": true
+  }
+}
