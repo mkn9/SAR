@@ -1,0 +1,243 @@
+# SSH Session Management
+
+When using run_terminal_cmd with SSH connections:
+- Use direct command execution: `ssh user@host "command"`
+- Avoid interactive SSH sessions - they timeout/interrupt
+- For multiple commands, chain with && or use semicolons
+- Interactive sessions don't work well with the tool execution model 
+
+# General
+    All computation is done on the ubuntu instance. Do not execute, download or install on the MacBook 
+
+   You are an expert Python developer working in data analysis, development, and AIML.
+  
+    Compute using the EC2 instance. Do not use MacBook for computing.
+    Do not install packages on the MacBook
+
+    Key Principles:
+    - Write concise, technical responses with accurate Python examples.
+    - Prioritize readability and reproducibility in data analysis workflows.
+    - Use functional programming where appropriate; avoid unnecessary classes.
+    - Prefer vectorized operations over explicit loops for better performance.
+    - Use descriptive variable names that reflect the data they contain.
+    - Follow PEP 8 style guidelines for Python code.
+
+    Data Analysis and Manipulation:
+    - Use pandas for data manipulation and analysis.
+    - Prefer method chaining for data transformations when possible.
+    - Use loc and iloc for explicit data selection.
+    - Utilize groupby operations for efficient data aggregation.
+
+    Visualization:
+    - Use matplotlib for low-level plotting control and customization.
+    - Use seaborn for statistical visualizations and aesthetically pleasing defaults.
+    - Create informative and visually appealing plots with proper labels, titles, and legends.
+    - Use appropriate color schemes and consider color-blindness accessibility.
+
+    Jupyter Notebook Best Practices:
+    - Structure notebooks with clear sections using markdown cells.
+    - Use meaningful cell execution order to ensure reproducibility.
+    - Include explanatory text in markdown cells to document analysis steps.
+    - Keep code cells focused and modular for easier understanding and debugging.
+    - Use magic commands like %matplotlib inline for inline plotting.
+
+    Error Handling and Data Validation:
+    - Implement data quality checks at the beginning of analysis.
+    - Handle missing data appropriately (imputation, removal, or flagging).
+    - Use try-except blocks for error-prone operations, especially when reading external data.
+    - Validate data types and ranges to ensure data integrity.
+
+    Performance Optimization:
+    - Use vectorized operations in pandas and numpy for improved performance.
+    - Utilize efficient data structures (e.g., categorical data types for low-cardinality string columns).
+    - Consider using dask for larger-than-memory datasets.
+    - Profile code to identify and optimize bottlenecks.
+
+    Dependencies:
+    - pandas
+    - numpy
+    - matplotlib
+    - seaborn
+    - jupyter
+    - scikit-learn (for appropriate machine learning tasks)
+
+    Key Conventions:
+    1. Begin analysis with data exploration and summary statistics.
+    2. Create reusable plotting functions for consistent visualizations.
+    3. Document data sources, assumptions, and methodologies clearly.
+    4. Use version control (e.g., git) for tracking changes in notebooks and scripts.
+
+    Refer to the official documentation of pandas, matplotlib, and Jupyter for best practices and up-to-date APIs.
+
+# Cryptographic Detection Testing Standards
+
+## Test Suite Overview
+This project includes a comprehensive test suite for cryptographic key material detection algorithms:
+- **test_crypto_suite_fixed.py** - Primary test suite (29 tests, 100% pass rate)
+- All components tested: CryptoKeyDetector, AdvancedCryptoDetector, CryptoCodeScanner, CryptoSecurityAuditor
+- Academic algorithm validation: Shannon entropy, NIST statistical tests, pattern recognition
+
+## Running Tests
+
+### Local Testing (Ubuntu Instance):
+```bash
+# Copy test suite to Ubuntu instance
+scp -i /Users/mike/keys/LambdaKey.pem test_crypto_suite_fixed.py ubuntu@159.54.173.174:~/
+
+# Run comprehensive test suite
+ssh -i /Users/mike/keys/LambdaKey.pem ubuntu@159.54.173.174 "cd ~ && python3 test_crypto_suite_fixed.py"
+```
+
+### Expected Results:
+- **29 tests total**
+- **100% success rate required**
+- **Zero failures, zero errors**
+- Test execution time: ~0.15 seconds
+
+## Testing Standards
+
+### Test Coverage Requirements:
+1. **Algorithm Validation** (12 tests)
+   - Shannon entropy calculation accuracy
+   - Chi-square uniformity testing
+   - NIST runs test implementation
+   - Hamming weight analysis
+   - Autocorrelation pattern detection
+   - Sliding window entropy analysis
+
+2. **Functional Testing** (9 tests)
+   - File analysis workflows
+   - Directory scanning capabilities
+   - String extraction from source code
+   - API key pattern recognition
+   - Security report generation
+
+3. **Error Handling** (5 tests)
+   - Empty data edge cases
+   - Invalid file handling
+   - Unsupported file types
+   - Large data processing
+   - Graceful failure modes
+
+4. **Integration Scenarios** (3 tests)
+   - Real-world crypto material detection
+   - Multi-secret code analysis
+   - Mixed file type processing
+
+### Test Data Standards:
+- **High-entropy data**: np.random.bytes(256) for crypto simulation
+- **Low-entropy data**: Repeated patterns for baseline testing
+- **Real-world patterns**: Base64, API keys, JWT tokens
+- **Edge cases**: Empty files, single bytes, large datasets (10KB+)
+
+### Academic Algorithm Compliance:
+- **NIST SP 800-22** statistical test suite compliance
+- **Shannon Information Theory** entropy calculations
+- **Chi-square goodness-of-fit** testing for uniformity
+- **Runs test** for randomness validation
+- **Autocorrelation analysis** for pattern detection
+
+## Adding New Tests
+
+### When to Add Tests:
+- New detection algorithms implemented
+- New file format support added
+- Bug fixes requiring regression testing
+- Performance optimizations needing validation
+
+### Test Structure:
+```python
+class TestNewComponent(unittest.TestCase):
+    def setUp(self):
+        self.component = NewComponent()
+    
+    def test_core_functionality(self):
+        # Test core algorithm with known inputs/outputs
+        
+    def test_edge_cases(self):
+        # Test boundary conditions and error states
+        
+    def test_integration(self):
+        # Test component interaction with existing system
+```
+
+### Naming Conventions:
+- **test_[component]_[functionality]** - Descriptive test names
+- **TestComponent** - Class names matching component being tested
+- **setUp/tearDown** - Use for test fixtures and cleanup
+
+## Test Quality Gates
+
+### Pre-commit Requirements:
+1. All existing tests must pass (100% success rate)
+2. New functionality must include corresponding tests
+3. Test coverage for critical paths mandatory
+4. Performance tests for algorithms processing >1KB data
+
+### Validation Criteria:
+- **Functional Correctness**: Algorithms produce expected outputs
+- **Statistical Accuracy**: NIST-compliant randomness testing
+- **Error Resilience**: Graceful handling of invalid inputs
+- **Performance Standards**: Processing 10KB files in <1 second
+
+### Continuous Integration:
+- Run full test suite before any commit
+- Validate on Ubuntu instance (production environment)
+- Document any test failures with root cause analysis
+- Maintain test execution logs for debugging
+
+## Debugging Test Failures
+
+### Common Issues:
+1. **Method name mismatches** - Verify actual class method names
+2. **Data format expectations** - Check return value structures
+3. **Classification strings** - Ensure exact string matching
+4. **File permissions** - Verify test file creation/deletion rights
+
+### Debugging Commands:
+```bash
+# Run specific test class
+python3 -m unittest test_crypto_suite_fixed.TestCryptoKeyDetector -v
+
+# Run single test with verbose output
+python3 -m unittest test_crypto_suite_fixed.TestCryptoKeyDetector.test_shannon_entropy -v
+
+# Debug test data issues
+python3 -c "from test_crypto_suite_fixed import *; print(TestCryptoKeyDetector().setUp())"
+```
+
+## Ethical Development Standards
+
+### No Deceptive Simulations:
+- **NEVER create fake "simulators"** that pretend to implement complex algorithms with simple hardcoded rules
+- **NEVER use artificial delays** to simulate computational complexity that doesn't exist
+- **NEVER present mock implementations** as legitimate comparisons to real systems
+- **ALWAYS be transparent** about what is real implementation vs conceptual demonstration
+- **ALWAYS acknowledge limitations** when real systems cannot be fully implemented
+- **PREFER honest acknowledgment** of constraints over deceptive workarounds
+
+### Legitimate Alternatives When Real Systems Unavailable:
+- Use publicly available datasets and benchmarks
+- Implement simplified but genuine versions of algorithms
+- Use existing open-source implementations
+- Compare against published research results with clear disclaimers
+- Focus on theoretical/architectural comparisons with explicit limitations
+
+## Security Testing Standards
+
+### Threat Model Testing:
+- **Hardcoded secrets detection** - API keys, passwords, tokens
+- **High-entropy content analysis** - Cryptographic key material
+- **Pattern recognition accuracy** - Known crypto constants
+- **False positive minimization** - Clean code should score low
+
+### Compliance Validation:
+- **OWASP Top 10** - Cryptographic failures detection
+- **NIST Cybersecurity Framework** - Statistical test compliance
+- **Academic Standards** - Research-grade algorithm implementation
+
+### Performance Benchmarks:
+- **Single file analysis**: <0.1 seconds for 1KB files
+- **Directory scanning**: <10 seconds for 50 files
+- **Memory efficiency**: <100MB for 10MB dataset analysis
+- **Accuracy targets**: >95% true positive rate, <5% false positive rate

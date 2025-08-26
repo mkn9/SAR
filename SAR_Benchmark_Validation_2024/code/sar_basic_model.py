@@ -1,0 +1,282 @@
+#!/usr/bin/env python3
+"""
+Basic Synthetic Aperture Radar (SAR) Model
+Based on mathematical formulas from reputable sources including:
+- Introduction to Synthetic Aperture Radar by Ian G. Cumming and Frank H. Wong
+- Synthetic Aperture Radar Signal Processing by Mehrdad Soumekh
+- IEEE papers on SAR signal processing
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import chirp
+from scipy.fft import fft, ifft, fftfreq, fftshift, ifftshift
+import math
+
+class BasicSARModel:
+    def __init__(self, fc=10e9, B=100e6, Tp=10e-6, c=3e8):
+        """
+        Initialize SAR model parameters
+        
+        Parameters:
+        fc: Carrier frequency (Hz) - typical X-band SAR at 10 GHz
+        B: Bandwidth (Hz) - typical 100 MHz for high resolution
+        Tp: Pulse duration (s) - typical 10 microseconds
+        c: Speed of light (m/s)
+        """
+        self.fc = fc          # Carrier frequency
+        self.B = B            # Bandwidth
+        self.Tp = Tp          # Pulse duration
+        self.c = c            # Speed of light
+        self.wavelength = c / fc
+        
+        # Derived parameters
+        self.Kr = B / Tp      # Chirp rate (Hz/s)
+        
+        print(f"SAR Model Initialized:")
+        print(f"Carrier frequency: {fc/1e9:.1f} GHz")
+        print(f"Bandwidth: {B/1e6:.1f} MHz")
+        print(f"Pulse duration: {Tp*1e6:.1f} μs")
+        print(f"Wavelength: {self.wavelength*100:.2f} cm")
+        print(f"Range resolution: {c/(2*B):.2f} m")
+    
+    def generate_chirp_pulse(self, fs=200e6, plot=False):
+        """
+        Generate a linear frequency modulated (LFM) chirp pulse
+        
+        The transmitted signal is: s(t) = rect(t/Tp) * exp(j*2*pi*(fc*t + Kr*t^2/2))
+        
+        Parameters:
+        fs: Sampling frequency (Hz)
+        plot: Whether to plot the pulse
+        
+        Returns:
+        t: Time vector
+        pulse: Complex chirp pulse
+        """
+        # Time vector
+        N_samples = int(fs * self.Tp)
+        t = np.linspace(-self.Tp/2, self.Tp/2, N_samples)
+        
+        # Generate LFM chirp
+        # s(t) = exp(j*2*pi*(fc*t + Kr*t^2/2))
+        pulse = np.exp(1j * 2 * np.pi * (self.fc * t + 0.5 * self.Kr * t**2))
+        
+        if plot:
+            plt.figure(figsize=(12, 8))
+            
+            plt.subplot(2, 2, 1)
+            plt.plot(t*1e6, np.real(pulse))
+            plt.title('Real Part of Chirp Pulse')
+            plt.xlabel('Time (μs)')
+            plt.ylabel('Amplitude')
+            plt.grid(True)
+            
+            plt.subplot(2, 2, 2)
+            plt.plot(t*1e6, np.imag(pulse))
+            plt.title('Imaginary Part of Chirp Pulse')
+            plt.xlabel('Time (μs)')
+            plt.ylabel('Amplitude')
+            plt.grid(True)
+            
+            plt.subplot(2, 2, 3)
+            plt.plot(t*1e6, np.abs(pulse))
+            plt.title('Magnitude of Chirp Pulse')
+            plt.xlabel('Time (μs)')
+            plt.ylabel('Amplitude')
+            plt.grid(True)
+            
+            plt.subplot(2, 2, 4)
+            plt.plot(t*1e6, np.angle(pulse))
+            plt.title('Phase of Chirp Pulse')
+            plt.xlabel('Time (μs)')
+            plt.ylabel('Phase (rad)')
+            plt.grid(True)
+            
+            plt.tight_layout()
+            plt.savefig('chirp_pulse.png', dpi=300, bbox_inches='tight')
+            plt.show()
+        
+        return t, pulse
+    
+    def point_target_response(self, R0, fs=200e6, plot=False):
+        """
+        Generate the response from a point target at range R0
+        
+        The received signal from a point target is:
+        sr(t) = A * s(t - 2*R0/c) * exp(-j*4*pi*R0/lambda)
+        
+        Parameters:
+        R0: Target range (m)
+        fs: Sampling frequency (Hz)
+        plot: Whether to plot the response
+        
+        Returns:
+        t: Time vector
+        response: Point target response
+        """
+        # Generate transmitted pulse
+        t_tx, pulse_tx = self.generate_chirp_pulse(fs)
+        
+        # Time delay for round trip
+        tau = 2 * R0 / self.c
+        
+        # Create longer time vector to accommodate delay
+        t_max = max(self.Tp, tau) + self.Tp
+        N_total = int(fs * t_max)
+        t = np.linspace(0, t_max, N_total)
+        
+        # Find delay in samples
+        delay_samples = int(tau * fs)
+        
+        # Create received signal with delay and phase shift
+        response = np.zeros(len(t), dtype=complex)
+        
+        if delay_samples < len(t) - len(pulse_tx):
+            # Apply range delay and phase shift
+            phase_shift = np.exp(-1j * 4 * np.pi * R0 / self.wavelength)
+            response[delay_samples:delay_samples + len(pulse_tx)] = pulse_tx * phase_shift
+        
+        if plot:
+            plt.figure(figsize=(12, 6))
+            
+            plt.subplot(2, 1, 1)
+            plt.plot(t*1e6, np.real(response))
+            plt.title(f'Point Target Response (Range = {R0} m) - Real Part')
+            plt.xlabel('Time (μs)')
+            plt.ylabel('Amplitude')
+            plt.grid(True)
+            
+            plt.subplot(2, 1, 2)
+            plt.plot(t*1e6, np.abs(response))
+            plt.title(f'Point Target Response (Range = {R0} m) - Magnitude')
+            plt.xlabel('Time (μs)')
+            plt.ylabel('Amplitude')
+            plt.grid(True)
+            
+            plt.tight_layout()
+            plt.savefig(f'point_target_R{R0}m.png', dpi=300, bbox_inches='tight')
+            plt.show()
+        
+        return t, response
+    
+    def range_compression(self, received_signal, plot=False):
+        """
+        Perform range compression using matched filtering
+        
+        The matched filter is the time-reversed complex conjugate of the transmitted pulse:
+        h(t) = s*(-t)
+        
+        Parameters:
+        received_signal: Received radar signal
+        plot: Whether to plot compression results
+        
+        Returns:
+        compressed: Range-compressed signal
+        """
+        # Generate reference chirp (matched filter)
+        t_ref, ref_chirp = self.generate_chirp_pulse()
+        
+        # Matched filter is time-reversed complex conjugate
+        matched_filter = np.conj(ref_chirp[::-1])
+        
+        # Perform convolution (matched filtering)
+        compressed = np.convolve(received_signal, matched_filter, mode='same')
+        
+        if plot:
+            plt.figure(figsize=(12, 8))
+            
+            plt.subplot(2, 2, 1)
+            plt.plot(np.abs(received_signal))
+            plt.title('Received Signal - Magnitude')
+            plt.xlabel('Sample')
+            plt.ylabel('Amplitude')
+            plt.grid(True)
+            
+            plt.subplot(2, 2, 2)
+            plt.plot(np.abs(matched_filter))
+            plt.title('Matched Filter - Magnitude')
+            plt.xlabel('Sample')
+            plt.ylabel('Amplitude')
+            plt.grid(True)
+            
+            plt.subplot(2, 2, 3)
+            plt.plot(np.abs(compressed))
+            plt.title('Range Compressed Signal - Magnitude')
+            plt.xlabel('Sample')
+            plt.ylabel('Amplitude')
+            plt.grid(True)
+            
+            plt.subplot(2, 2, 4)
+            plt.plot(20*np.log10(np.abs(compressed) + 1e-10))
+            plt.title('Range Compressed Signal - dB')
+            plt.xlabel('Sample')
+            plt.ylabel('Magnitude (dB)')
+            plt.grid(True)
+            
+            plt.tight_layout()
+            plt.savefig('range_compression.png', dpi=300, bbox_inches='tight')
+            plt.show()
+        
+        return compressed
+    
+    def calculate_range_resolution(self):
+        """Calculate theoretical range resolution"""
+        return self.c / (2 * self.B)
+    
+    def calculate_unambiguous_range(self, PRF):
+        """Calculate unambiguous range given PRF"""
+        return self.c / (2 * PRF)
+
+def main():
+    """Demonstrate basic SAR model functionality"""
+    print("=== Basic SAR Model Demonstration ===")
+    
+    # Initialize SAR model with typical X-band parameters
+    sar = BasicSARModel(fc=10e9, B=100e6, Tp=10e-6)
+    
+    print(f"\nTheoretical range resolution: {sar.calculate_range_resolution():.2f} m")
+    
+    # Generate and display chirp pulse
+    print("\n1. Generating chirp pulse...")
+    t_chirp, pulse = sar.generate_chirp_pulse(plot=True)
+    
+    # Simulate point target at 1000m range
+    print("\n2. Simulating point target at 1000m...")
+    t_target, target_response = sar.point_target_response(R0=1000, plot=True)
+    
+    # Perform range compression
+    print("\n3. Performing range compression...")
+    compressed = sar.range_compression(target_response, plot=True)
+    
+    # Find peak and calculate achieved resolution
+    peak_idx = np.argmax(np.abs(compressed))
+    peak_power = np.abs(compressed[peak_idx])**2
+    half_power_level = peak_power / 2
+    
+    # Find -3dB points
+    left_3db = peak_idx
+    right_3db = peak_idx
+    
+    while left_3db > 0 and np.abs(compressed[left_3db])**2 > half_power_level:
+        left_3db -= 1
+    
+    while right_3db < len(compressed)-1 and np.abs(compressed[right_3db])**2 > half_power_level:
+        right_3db += 1
+    
+    # Convert to range resolution
+    fs = 200e6  # Sampling frequency used
+    dt = 1/fs
+    resolution_samples = right_3db - left_3db
+    achieved_resolution = resolution_samples * dt * sar.c / 2
+    
+    print(f"\nResults:")
+    print(f"Peak location (sample): {peak_idx}")
+    print(f"Achieved range resolution: {achieved_resolution:.2f} m")
+    print(f"Theoretical resolution: {sar.calculate_range_resolution():.2f} m")
+    print(f"Resolution ratio: {achieved_resolution/sar.calculate_range_resolution():.2f}")
+    
+    print("\n=== SAR Model Demo Complete ===")
+
+if __name__ == "__main__":
+    main()
