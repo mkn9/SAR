@@ -1,0 +1,44 @@
+{
+  "timestamp": "2025-08-27T02:07:08.889592",
+  "analysis_type": "lfmcw_vs_pulsed_sar",
+  "system_parameters": {
+    "carrier_frequency": 10000000000.0,
+    "bandwidth": 100000000.0,
+    "lfmcw_sweep_time": 0.001,
+    "pulsed_prf": 1000,
+    "range_resolution": 1.5,
+    "max_range_lfmcw": 150000.0
+  },
+  "key_differences": {
+    "signal_type": {
+      "lfmcw": "Continuous wave with frequency modulation",
+      "pulsed": "Discrete pulses with pulse compression"
+    },
+    "processing": {
+      "lfmcw": "2D FFT for Range-Doppler Map",
+      "pulsed": "Matched filtering + synthetic aperture"
+    },
+    "output": {
+      "lfmcw": "Range-Doppler Map (RDM)",
+      "pulsed": "SAR image with azimuth compression"
+    }
+  },
+  "performance_comparison": {
+    "processing_complexity": {
+      "winner": "LFMCW",
+      "reason": "Simple 2D FFT vs complex multi-stage"
+    },
+    "range_accuracy": {
+      "winner": "Pulsed SAR",
+      "reason": "Mature pulse compression techniques"
+    },
+    "doppler_accuracy": {
+      "winner": "LFMCW",
+      "reason": "Direct Doppler measurement"
+    },
+    "real_time_capability": {
+      "winner": "LFMCW",
+      "reason": "Simpler processing pipeline"
+    }
+  }
+}

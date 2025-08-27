@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-08-27T02:19:36.942628",
+  "analysis_type": "spotlight_vs_stripmap_sar",
+  "system_parameters": {
+    "carrier_frequency": 10000000000.0,
+    "wavelength": 0.03,
+    "bandwidth": 100000000.0,
+    "antenna_length": 5.0,
+    "antenna_beamwidth_deg": 0.34377467707849396,
+    "platform_velocity": 200,
+    "platform_altitude": 500000.0
+  },
+  "performance_comparison_500km": {
+    "stripmap": {
+      "azimuth_resolution_m": 1721.052631578947,
+      "swath_width_km": 50.0,
+      "coverage_rate_km2_per_s": 10.0,
+      "integration_time_s": 17.210526315789473,
+      "synthetic_aperture_km": 3.442105263157895
+    },
+    "spotlight": {
+      "azimuth_resolution_m": 4.302631578947367,
+      "scene_size_km": 20.027390286060175,
+      "coverage_rate_km2_per_s": 31.5020345801156,
+      "integration_time_s": 10.0,
+      "synthetic_aperture_km": 2.0
+    }
+  },
+  "key_trade_offs": {
+    "resolution_improvement_factor": 400.00000000000006,
+    "coverage_rate_ratio": 0.3174398140719489,
+    "integration_time_ratio": 0.581039755351682
+  },
+  "fundamental_equations": {
+    "azimuth_resolution": "\u0394Az = \u03bb*R/(2*L_syn)",
+    "stripmap_aperture": "L_syn = \u03bb*R/\u03b8_antenna (antenna limited)",
+    "spotlight_aperture": "L_syn = 2*R*tan(\u03b8_steer/2) (steering limited)",
+    "coverage_rate_stripmap": "Coverage = Swath_width \u00d7 Velocity",
+    "coverage_rate_spotlight": "Coverage = Scene_area / Integration_time"
+  }
+}

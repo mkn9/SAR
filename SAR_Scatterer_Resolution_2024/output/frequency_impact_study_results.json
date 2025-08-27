@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-08-27T02:04:28.659443",
+  "study_type": "frequency_impact_resolution",
+  "fixed_parameters": {
+    "bandwidth": 100000000.0,
+    "range_resolution": 1.5,
+    "platform_velocity": 200,
+    "synthetic_aperture_length": 200.0,
+    "reference_range": 1000.0
+  },
+  "frequency_cases": {
+    "P_band": {
+      "frequency": 400000000.0,
+      "band_name": "P-band",
+      "wavelength": 0.75,
+      "azimuth_resolution_1km": 1.875,
+      "applications": "Forest biomass, subsurface imaging"
+    },
+    "L_band": {
+      "frequency": 1250000000.0,
+      "band_name": "L-band",
+      "wavelength": 0.24,
+      "azimuth_resolution_1km": 0.6,
+      "applications": "ALOS PALSAR, soil moisture"
+    },
+    "S_band": {
+      "frequency": 3200000000.0,
+      "band_name": "S-band",
+      "wavelength": 0.09375,
+      "azimuth_resolution_1km": 0.234375,
+      "applications": "Weather radar, some SAR systems"
+    },
+    "C_band": {
+      "frequency": 5400000000.0,
+      "band_name": "C-band",
+      "wavelength": 0.05555555555555555,
+      "azimuth_resolution_1km": 0.13888888888888887,
+      "applications": "Sentinel-1, RADARSAT-2"
+    },
+    "X_band": {
+      "frequency": 9600000000.0,
+      "band_name": "X-band",
+      "wavelength": 0.03125,
+      "azimuth_resolution_1km": 0.078125,
+      "applications": "TerraSAR-X, COSMO-SkyMed"
+    },
+    "Ku_band": {
+      "frequency": 15000000000.0,
+      "band_name": "Ku-band",
+      "wavelength": 0.02,
+      "azimuth_resolution_1km": 0.05,
+      "applications": "High-resolution SAR"
+    },
+    "Ka_band": {
+      "frequency": 35000000000.0,
+      "band_name": "Ka-band",
+      "wavelength": 0.008571428571428572,
+      "azimuth_resolution_1km": 0.02142857142857143,
+      "applications": "Very high-resolution SAR"
+    }
+  },
+  "key_relationships": {
+    "range_resolution": "\u0394R = c/(2*B) - Independent of frequency",
+    "azimuth_resolution": "\u0394Az = \u03bb*R/(2*L_syn) = c*R/(2*fc*L_syn) - Inversely proportional to frequency"
+  }
+}

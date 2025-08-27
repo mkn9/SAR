@@ -1,0 +1,94 @@
+{
+  "timestamp": "2025-08-27T02:20:01.394994",
+  "analysis_type": "synthetic_aperture_size_analysis",
+  "system_parameters": {
+    "carrier_frequency": 10000000000.0,
+    "wavelength": 0.03,
+    "bandwidth": 100000000.0,
+    "platform_velocity": 200,
+    "platform_altitude": 500000.0
+  },
+  "fundamental_relationship": {
+    "formula": "\u0394Az = \u03bb*R/(2*L_syn)",
+    "description": "Azimuth resolution inversely proportional to synthetic aperture size"
+  },
+  "lfmcw_limitations": {
+    "coherence_time": {
+      "value": 200.0,
+      "description": "Platform motion over coherence time (1.0s)",
+      "formula": "L_max = V_platform \u00d7 T_coherence"
+    },
+    "doppler_bandwidth": {
+      "max_doppler_freq": 500.0,
+      "max_apertures": {
+        "100000.0": 7500.0,
+        "250000.0": 18750.0,
+        "500000.0": 37500.0,
+        "1000000.0": 75000.0
+      },
+      "description": "Limited by sweep repetition rate and Doppler ambiguity",
+      "formula": "f_d_max = PRF/2, L_max = 2*R*f_d_max*\u03bb/(2*V)"
+    },
+    "range_migration": {
+      "max_apertures": {
+        "100000.0": 1095.4451150103323,
+        "250000.0": 1732.0508075688772,
+        "500000.0": 2449.489742783178,
+        "1000000.0": 3464.1016151377544
+      },
+      "description": "Range migration must stay within one range bin",
+      "formula": "L_max = sqrt(8*R*\u0394R)"
+    },
+    "processing_complexity": {
+      "value": 1638.4,
+      "description": "FFT size limit for real-time processing (8192 points)",
+      "formula": "L_max = V \u00d7 N_FFT / PRF"
+    }
+  },
+  "pulsed_sar_limitations": {
+    "coherence_time": {
+      "value": 400.0,
+      "description": "Platform motion over coherence time (2.0s)",
+      "formula": "L_max = V_platform \u00d7 T_coherence"
+    },
+    "doppler_ambiguity": {
+      "PRF": 1000,
+      "max_apertures": {
+        "100000.0": 7500.0,
+        "250000.0": 18750.0,
+        "500000.0": 37500.0,
+        "1000000.0": 75000.0
+      },
+      "description": "Limited by PRF and Doppler ambiguity",
+      "formula": "sin(\u03b8_max) = \u03bb*PRF/(4*V), L_max = 2*R*sin(\u03b8_max)"
+    },
+    "range_migration": {
+      "max_apertures": {
+        "100000.0": 547.7225575051662,
+        "250000.0": 866.0254037844386,
+        "500000.0": 1224.744871391589,
+        "1000000.0": 1732.0508075688772
+      },
+      "description": "Range migration correction becomes complex",
+      "formula": "L_max = sqrt(8*R*\u0394R/4)"
+    },
+    "motion_compensation": {
+      "value": 0.375,
+      "description": "Motion measurement accuracy (0.1m)",
+      "formula": "L_max limited by phase accuracy = \u03bb/(4*motion_error)"
+    },
+    "processing_complexity": {
+      "value": 20000,
+      "description": "Complex algorithms: RCM, autofocus, motion compensation",
+      "formula": "L_max ~ 20km (practical operational limit)"
+    }
+  },
+  "key_insights": {
+    "lfmcw_optimal_range": "100m - 5km aperture",
+    "pulsed_sar_optimal_range": "1km - 20km aperture",
+    "lfmcw_advantage": "Real-time processing, simple algorithms",
+    "pulsed_sar_advantage": "Larger apertures, better resolution",
+    "range_migration_impact": "More critical for pulsed SAR",
+    "motion_compensation_impact": "Essential for pulsed SAR"
+  }
+}

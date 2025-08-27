@@ -1,0 +1,27 @@
+{
+  "timestamp": "2025-08-27T02:15:03.996351",
+  "analysis_type": "sar_detection_limits",
+  "system_parameters": {
+    "carrier_frequency": 10000000000.0,
+    "wavelength": 0.03,
+    "bandwidth": 100000000.0,
+    "antenna_diameter": 3.0,
+    "antenna_gain_db": 49.942997453882676,
+    "noise_figure_db": 3.0,
+    "system_losses_db": 6.0,
+    "min_snr_db": 13.0,
+    "system_temperature": 300
+  },
+  "radar_equation": {
+    "received_power": "Pr = (Pt \u00d7 G\u00b2 \u00d7 \u03bb\u00b2 \u00d7 \u03c3) / ((4\u03c0)\u00b3 \u00d7 R\u2074 \u00d7 L)",
+    "snr": "SNR = Pr / (k \u00d7 T \u00d7 B \u00d7 F \u00d7 N_pulses)",
+    "max_range": "R_max = [(Pt \u00d7 G\u00b2 \u00d7 \u03bb\u00b2 \u00d7 \u03c3 \u00d7 N) / ((4\u03c0)\u00b3 \u00d7 SNR_min \u00d7 k \u00d7 T \u00d7 B \u00d7 F \u00d7 L)]^(1/4)",
+    "min_rcs": "\u03c3_min = (SNR_min \u00d7 k \u00d7 T \u00d7 B \u00d7 F \u00d7 L \u00d7 (4\u03c0)\u00b3 \u00d7 R\u2074) / (Pt \u00d7 G\u00b2 \u00d7 \u03bb\u00b2 \u00d7 N)"
+  },
+  "key_insights": {
+    "range_dependence": "R\u2074 - very strong",
+    "power_scaling": "Detection range \u221d Power^(1/4)",
+    "integration_gain": "Coherent: N_pulses, Non-coherent: \u221aN_pulses",
+    "rcs_impact": "Linear with received power"
+  }
+}
